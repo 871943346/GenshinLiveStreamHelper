@@ -1,0 +1,66 @@
+if (!GM_getValue('gh_newYear')) {
+  GM_setValue('gh_newYear', false);
+}
+
+GM_registerMenuCommand(
+  `${GM_getValue('gh_newYear') ? '✅' : '❌'}新春限时开播福利（点击切换）`,
+  switch_newYear
+);
+
+function switch_newYear() {
+  GM_setValue('gh_newYear', !GM_getValue('gh_newYear'));
+  alert('切换成功,请刷新页面使之生效');
+}
+
+run_newYear();
+
+// 新春限时开播福利
+function run_newYear() {
+  log('原神直播活动抢码助手(改):开始尝试领取新春限时开播福利');
+  let timer = setInterval(() => {
+    let date = new Date();
+    if (
+      date.getHours() == 0 &&
+      date.getMinutes() == 29 &&
+      date.getSeconds() >= 59
+    ) {
+      clearInterval(timer);
+      begin_newYear();
+    }
+  }, 100);
+  function begin_newYear() {
+    log('助手开始领取新春限时开播福利,如若出现数据异常为正常情况');
+    if (GM_getValue('gh_newYear')) {
+      setInterval(() => {
+        switch (platform) {
+          case '虎牙':
+            if (
+              document.querySelectorAll('div.iatzPh div')[7].innerHTML ===
+              '已领取'
+            ) {
+              alert('已领取新春限时开播福利\n点击确定刷新页面');
+              window.location.reload();
+            } else {
+              document.querySelectorAll('div.iatzPh div')[7].click();
+              document.querySelectorAll('div.reload-item')[0].click();
+              document.querySelectorAll('div.diy-popup--btn')[0].click();
+            }
+            break;
+          case '斗鱼':
+            document.querySelectorAll('#bc88')[0].click();
+            if (
+              document.querySelectorAll('.wmTaskV3GiftBtn-btn')[0].innerHTML ===
+              '已领取'
+            ) {
+              alert('已领取新春限时开播福利\n点击确定刷新页面');
+              window.location.reload();
+            } else {
+              document.querySelectorAll('.wmTaskV3GiftBtn-btn')[0].click();
+              document.querySelectorAll('button.dy-btn')[0].click();
+            }
+            break;
+        }
+      }, interval);
+    }
+  }
+}
