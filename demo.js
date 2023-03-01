@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         原神直播活动抢码助手(改)
 // @namespace    https://github.com/871943346
-// @version      3.4.0.3
+// @version      3.5.0.1
 // @description  一款用于原神直播活动的抢码助手,支持哔哩哔哩、虎牙、斗鱼多个平台的自动抢码,附带一些页面优化功能
 // @author       ifeng0188
 // @author       871943346
@@ -22,9 +22,12 @@
 // ==/UserScript==
 
 /*
+    3.5.0.1
+    斗鱼3.4里程碑和页面净化修复
+    仍存在些许问题(待别的大佬修复)
     3.4.0.3
     去除新春限时开播福利(领取难度低)
-    虎牙每10s尝试领取经验
+    斗鱼、虎牙每10s刷新、领经验
     3.4.0.2
     自动打开里程碑-新增跳转到里程碑视图
     新增虎牙、斗鱼0:29:59开始领取新春限时开播福利（已测试成功）
@@ -55,7 +58,7 @@
   if (!GM_getValue('gh_pagePurify')) {
     GM_setValue('gh_pagePurify', false);
   }
-  if (!GM_getValue('gh_hyexp')) {
+  if (!GM_getValue('hyexp')) {
     GM_setValue('gh_hyexp', false);
   }
 
@@ -190,10 +193,11 @@
           break;
         case '斗鱼':
           let timer = setInterval(() => {
-            if (document.querySelectorAll('#bc68')[0]) {
+            //   if (document.querySelectorAll('#bc68')[0]){}else{window.location.reload();}
+            if (document.querySelectorAll('#bc20')[0]) {
               clearInterval(timer);
-              document.querySelectorAll('#bc68')[0].click();
-              jump('bc68');
+              document.querySelectorAll('#bc72')[0].click();
+              jump('bc72');
             }
           }, 1000);
           break;
@@ -203,9 +207,9 @@
       switch (platform) {
         case '斗鱼':
           let timer = setInterval(() => {
-            if (document.querySelectorAll('#bc46')[0]) {
+            if (document.querySelectorAll('#bc3')[0]) {
               clearInterval(timer);
-              clearElement(document.querySelectorAll('#bc46')[0].parentNode);
+              clearElement(document.querySelectorAll('#bc3')[0].parentNode);
             }
           }, 1000);
       }
@@ -297,8 +301,13 @@
             if (document.querySelectorAll('.dcpf-btn-confirm')[0]) {
               document.querySelectorAll('.dcpf-btn-confirm')[0].click();
             }
-          }, 100);
+          }, 10);
           break;
+        case '斗鱼':
+          setInterval(() => {
+            document.querySelectorAll('.wmTaskV3Reload')[0].click();
+          }, 10000);
+          breakl;
       }
     }
   }
